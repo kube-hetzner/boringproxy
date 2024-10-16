@@ -33,8 +33,8 @@ func checkBasicAuth(w http.ResponseWriter, r *http.Request, creds credentials) b
 	auth := r.Header.Get("Proxy-Authorization")
 	if auth == "" {
 		slog.Debug("No Proxy-Authorization header found", "remote_addr", r.RemoteAddr, "host", r.Host, "proto", r.Proto, "method", r.Method, "url", r.URL.String())
-		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.Header().Set("Proxy-Authenticate", "Basic realm=\"Proxy\"")
+		http.Error(w, "ProxyAuthRequired", http.StatusProxyAuthRequired)
 		return false
 	}
 
