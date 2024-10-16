@@ -1,4 +1,4 @@
-FROM docker.io/library/golang:1.23.2-bookworm@sha256:345d5e81c88be2c500edf00ed1dca6be656e4485cd79e4e0bcc73a90361910e0 AS builder
+FROM docker.io/library/golang:1.23.2@sha256:a7f2fc9834049c1f5df787690026a53738e55fc097cd8a4a93faa3e06c67ee32 AS builder
 WORKDIR /app
 COPY go.mod ./
 RUN go mod download
