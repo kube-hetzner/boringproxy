@@ -32,7 +32,7 @@ type credentials struct {
 func checkBasicAuth(w http.ResponseWriter, r *http.Request, creds credentials) bool {
 	auth := r.Header.Get("Proxy-Authorization")
 	if auth == "" {
-		slog.Debug("No Proxy-Authorization header found")
+		slog.Debug("No Proxy-Authorization header found", "remote_addr", r.RemoteAddr, "host", r.Host, "proto", r.Proto, "method", r.Method, "url", r.URL.String())
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return false
@@ -41,7 +41,7 @@ func checkBasicAuth(w http.ResponseWriter, r *http.Request, creds credentials) b
 	// Expected format: "Basic base64(username:password)"
 	const prefix = "Basic "
 	if !strings.HasPrefix(auth, prefix) {
-		slog.Debug("Invalid Proxy-Authorization header")
+		slog.Debug("Invalid Proxy-Authorization header", "remote_addr", r.RemoteAddr, "host", r.Host, "proto", r.Proto, "method", r.Method, "url", r.URL.String())
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return false
 	}
@@ -49,7 +49,7 @@ func checkBasicAuth(w http.ResponseWriter, r *http.Request, creds credentials) b
 	// Decode the base64 username:password
 	payload, err := base64.StdEncoding.DecodeString(auth[len(prefix):])
 	if err != nil {
-		slog.Debug("Failed to decode Proxy-Authorization header")
+		slog.Debug("Failed to decode Proxy-Authorization header", "remote_addr", r.RemoteAddr, "host", r.Host, "proto", r.Proto, "method", r.Method, "url", r.URL.String())
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return false
 	}
@@ -57,7 +57,7 @@ func checkBasicAuth(w http.ResponseWriter, r *http.Request, creds credentials) b
 	// Check if the credentials match
 	parts := strings.SplitN(string(payload), ":", 2)
 	if len(parts) != 2 || parts[0] != creds.username || parts[1] != creds.password {
-		slog.Debug("Invalid credentials")
+		slog.Debug("Invalid credentials", "remote_addr", r.RemoteAddr, "host", r.Host, "proto", r.Proto, "method", r.Method, "url", r.URL.String())
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return false
 	}
