@@ -122,7 +122,7 @@ func main() {
 	<-stop
 
 	// Gracefully shutdown the server, waiting for ongoing requests to finish
-	slog.Info("Server shutting down gracefully", "timeout", shutdownTimeout)
+	slog.Info("Server shutting down gracefully", "timeout", shutdownTimeout.String())
 	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 	defer cancel()
 
