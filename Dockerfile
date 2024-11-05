@@ -11,6 +11,6 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 USER 65532
 ENTRYPOINT ["/proxy"]
 EXPOSE 31280
-# EXPOSE 31281 # Probes port, not exposed by default
+EXPOSE 31281
 
 LABEL org.opencontainers.image.source="https://github.com/kube-hetzner/boringproxy"
