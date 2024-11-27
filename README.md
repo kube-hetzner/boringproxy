@@ -50,4 +50,4 @@ This project is heavily inspired by [dumbproxy](https://github.com/SenseUnit/dum
 
 ## License
 
-This project is licensed under the Apache v2.0 License. See the [LICENSE](LICENSE) file for details.
+This project is dual licensed under the [MIT License](LICENSE-MIT) and the [Apache v2.0 License](LICENSE-Apache). You have the freedom to choose whichever one works best for you. Contributing will result in your contribution being dual licensed under both of these licenses.
