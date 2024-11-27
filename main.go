@@ -46,8 +46,6 @@ const (
 	portProbesDefault      = "31281"
 	shutdownTimeoutDefault = 5 * time.Second
 	readinessURLDefault    = "https://cloudflare.com/cdn-cgi/trace"
-	usernameDefault        = "proxy"
-	passwordDefault        = "secret"
 )
 
 func main() {
@@ -57,8 +55,14 @@ func main() {
 	portProbes := getEnv("PORT_PROBES", portProbesDefault)
 	shutdownTimeoutS := getEnv("SHUTDOWN_TIMEOUT", shutdownTimeoutDefault.String())
 	readinessURL := getEnv("READINESS_URL", readinessURLDefault)
-	username := getEnv("USERNAME", usernameDefault)
-	password := getEnv("PASSWORD", passwordDefault)
+	username := getEnv("USERNAME")
+	password := getEnv("PASSWORD")
+
+	// Check if the username and password are set
+	if username == "" || password == "" {
+		slog.Error("Username and password must be set")
+		os.Exit(1)
+	}
 
 	// Parse the debug value
 	debug, err := strconv.ParseBool(debugS)
