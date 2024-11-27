@@ -25,7 +25,6 @@ The proxy is highly configurable using the following environment variables:
 ### Notes
 - **Mandatory Variables:** Both `USERNAME` and `PASSWORD` are required for the proxy to run. If either is not set, the application will exit with an error.
 - **Shutdown Timeout Format:** Ensure `SHUTDOWN_TIMEOUT` is provided in seconds (e.g., `5s`).
-                |
 
 ## Usage
 
