@@ -31,10 +31,11 @@ import (
 	"os"
 )
 
-func getEnv(key, defaultValue string) string {
+// Gets environment variable with optional default value
+func getEnv(key string, defaultValue ...string) string {
 	value := os.Getenv(key)
-	if value == "" {
-		return defaultValue
+	if value == "" && len(defaultValue) != 0 {
+		return defaultValue[0]
 	}
 	return value
 }
