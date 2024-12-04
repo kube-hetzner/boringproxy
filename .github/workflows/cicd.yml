@@ -84,10 +84,10 @@ jobs:
         run: docker save -o image.tar ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
 
       - name: Compress tar with gzip
-        run: gzip -9 image.tar
+        run: gzip -9 -k image.tar
 
       - name: Compress tar with zstd
-        run: zstd -19 image.tar
+        run: zstd -19 -k image.tar
 
       - name: Upload compressed archives to release
         uses: softprops/action-gh-release@v2
