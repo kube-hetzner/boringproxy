@@ -49,6 +49,14 @@ const (
 )
 
 func main() {
+	// Check for the "--exit" argument
+	for _, arg := range os.Args[1:] {
+		if arg == "--exit" {
+			slog.Info("Exiting as requested by --exit argument")
+			os.Exit(0)
+		}
+	}
+
 	// Load env vars
 	debugS := getEnv("DEBUG", strconv.FormatBool(debugDefault))
 	portProxy := getEnv("PORT_PROXY", portProxyDefault)
@@ -122,14 +130,14 @@ func main() {
 		slog.Info("Starting proxy server", "port", portProxy)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			slog.Error("Proxy: ListenAndServe", "error", err)
-			os.Exit(1)
+			panic(err)
 		}
 	}()
 	go func() {
 		slog.Info("Starting probes server", "port", portProbes)
 		if err := serverProbes.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			slog.Error("Probes: ListenAndServe", "error", err)
-			os.Exit(1)
+			panic(err)
 		}
 	}()
 
