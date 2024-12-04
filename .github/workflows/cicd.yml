@@ -70,6 +70,12 @@ jobs:
 
     if: startsWith(github.ref, 'refs/tags/')
 
+    env:
+      ARCHITECTURES: |-
+        amd64
+        arm64
+        arm/v7
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -77,23 +83,24 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Download Docker image
-        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
-
-      - name: Save locally built Docker image as tar
-        run: docker save -o image.tar ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
-
-      - name: Compress tar with gzip
-        run: gzip -9 -k image.tar
-
-      - name: Compress tar with zstd
-        run: zstd -19 -k image.tar
+      - name: Pull and save Docker images for all architectures
+        run: |
+          for arch in $ARCHITECTURES; do
+            echo "Processing architecture: $arch"
+            arch_suffix=$(echo $arch | tr '/' '-')  # Replace '/' with '-' for file naming
+            image_tag="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}"
+            
+            docker pull --platform linux/$arch $image_tag
+            docker save -o boringproxy-airgap-image-$arch_suffix.tar $image_tag
+            gzip -9 -k boringproxy-airgap-image-$arch_suffix.tar
+            zstd -19 -k boringproxy-airgap-image-$arch_suffix.tar
+          done
 
       - name: Upload compressed archives to release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            image.tar.gz
-            image.tar.zst
+            boringproxy-airgap-image-*.tar.gz
+            boringproxy-airgap-image-*.tar.zst
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
