@@ -63,16 +63,13 @@ jobs:
             linux/arm/v7
 
       - name: Save locally built Docker image as tar
-        run: |-
-          docker save -o image.tar ${{ steps.meta.outputs.tags }}
+        run: docker save -o image.tar ${{ steps.meta.outputs.tags }}
 
       - name: Compress tar with gzip
         run: gzip -9 image.tar
 
       - name: Compress tar with zstd
-        run: |-
-          sudo apt-get install -y zstd
-          zstd -19 image.tar.gz
+        run: sudo apt-get install -y zstd && zstd -19 image.tar.gz
 
       - name: Create release (if tagged)
         if: startsWith(github.ref, 'refs/tags/')
