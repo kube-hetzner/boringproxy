@@ -69,35 +69,14 @@ jobs:
         run: gzip -9 image.tar
 
       - name: Compress tar with zstd
-        run: sudo apt-get install -y zstd && zstd -19 image.tar.gz
+        run: zstd -19 image.tar
 
-      - name: Create release (if tagged)
+      - name: Upload compressed archives to release
         if: startsWith(github.ref, 'refs/tags/')
-        id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload gzipped tar to release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_id: ${{ steps.create_release.outputs.id }}
-          asset_path: ./image.tar.gz
-          asset_name: image.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload zstd-compressed tar to release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: actions/upload-release-asset@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_id: ${{ steps.create_release.outputs.id }}
-          asset_path: ./image.tar.gz.zst
-          asset_name: image.tar.zst
-          asset_content_type: application/zstd
+          files: |
+            image.tar.gz
+            image.tar.zst
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
