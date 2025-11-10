@@ -3,7 +3,7 @@
 # You may choose either license to govern your use of this project.
 # See the LICENSE-MIT and LICENSE-Apache files for details.
 
-FROM docker.io/library/golang:1.24.0-bookworm@sha256:6260304a09fb81a1983db97c9e6bfc1779ebce33d39581979a511b3c7991f076 AS builder
+FROM docker.io/library/golang:1.25.4-bookworm@sha256:7419f544ffe9be4d7cbb5d2d2cef5bd6a77ec81996ae2ba15027656729445cc4 AS builder
 WORKDIR /app
 COPY go.mod ./
 RUN go mod download
